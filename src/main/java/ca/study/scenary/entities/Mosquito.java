@@ -18,6 +18,7 @@ import org.kie.api.definition.type.Role;
 public class Mosquito{
 
    private House house;
+   private House born;
 
 	public House getHouse() {
 		return house;
@@ -26,5 +27,14 @@ public class Mosquito{
 	public void setHouse(House house) {
 		this.house = house;
 	}
+	
+	    public House getBorn() {
+	        return born;
+	    }
+
+	    public void setBorn(House born) {
+	        this.born = born;
+	    }
+	   
    
 }

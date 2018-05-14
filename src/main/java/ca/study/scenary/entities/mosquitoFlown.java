@@ -14,7 +14,7 @@ import org.kie.api.definition.type.Role;
  *
  * @author alessandro
  */
-public class MosquitoMigrated {
+public class mosquitoFlown {
    private Mosquito migrated;
 
 public Mosquito getMigrated() {

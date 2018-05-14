@@ -8,6 +8,7 @@ package ca.study.scenary.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import ca.study.scenary.entities.Mosquito;
 
 /**
  *
@@ -54,6 +55,16 @@ public class House {
        {
        int chooseHouse = randomize(0, neighborHouse.size() - 1);
        House newHouse = neighborHouse.get(chooseHouse);
+       
+       House born = mosquitoChange.getBorn();
+       List <House> neigborn = born.getNeighbors();
+       
+       while(newHouse!=born&&neigborn.contains(newHouse)==false)
+       {
+           chooseHouse = randomize(0, neighborHouse.size() - 1); //aqui modificado
+           //chooseHouse=chooseHouse+1;
+           newHouse = neighborHouse.get(chooseHouse);
+       }
        List<Mosquito> newMosquitoAdd = newHouse.getMosquitos();
        this.getMosquitos().remove(mosquitoChange);
        newMosquitoAdd.add(mosquitoChange);
@@ -142,17 +153,20 @@ public class House {
     public void addMosquito() {
         Mosquito mosquito = new Mosquito();
         mosquito.setHouse(this);
+        mosquito.setBorn(this);
         mosquitos.add(mosquito);
     }
+    
     
     public Mosquito addMosq() {
         Mosquito mosquito = new Mosquito();
         mosquito.setHouse(this);
+        mosquito.setBorn(this);
         mosquitos.add(mosquito);
         //System.out.println("adicionou mosquito");
 		return mosquito;
     }
-
+    
     public List<House> getNeighbors() {
         return neighbors;
     }

@@ -24,9 +24,9 @@ rule "mosquitoFlying"
 	when
 		mosquito: Mosquito()
 		house: House() from mosquito.getHouse()
-		not MosquitoMigrated (this.migrated==mosquito) over window:time(1d)
+		not mosquitoFlown (this.migrated==mosquito) over window:time(1d)
 	then
-		MosquitoMigrated eventFlown =new MosquitoMigrated();
+		mosquitoFlown eventFlown =new mosquitoFlown();
 		eventFlown.setMigrated(mosquito);
 		house.changeMosquito(mosquito);
 		insert(eventFlown);
@@ -39,9 +39,9 @@ rule "mosquitoLayingEggs"
 	when
 		mosquito: Mosquito()
 		house: House(trap || activefocus) from mosquito.getHouse()
-		not MosquitoLayedEggs (this.layed==mosquito) over window:time(1d)
+		not mosquitoLayedEggs (this.layed==mosquito) over window:time(1d)
 	then
-		MosquitoLayedEggs eventLay = new MosquitoLayedEggs();
+		mosquitoLayedEggs eventLay = new mosquitoLayedEggs();
 		eventLay.setLayed(mosquito);
 		Eggs neweggs= house.addEggs();
 		insert(eventLay);
@@ -49,7 +49,7 @@ rule "mosquitoLayingEggs"
 		//update(house);
 		//System.out.println("mosquito lay");
 		
-		EggsHatched eventHatch = new EggsHatched();
+		eggsHatched eventHatch = new eggsHatched();
 		eventHatch.setHatched(neweggs);
 		insert(eventHatch);
 end
@@ -77,7 +77,7 @@ rule "eggshatching"
 	when
 		eggs: Eggs()
 		house: House(activefocus==true) from eggs.getHouse()
-		not EggsHatched (this.hatched==eggs) over window:time(20d)
+		not eggsHatched (this.hatched==eggs) over window:time(20d)
 	then
 		//house.removeEggs(eggs);
 		//update(house);
@@ -113,7 +113,7 @@ rule "capturedMosquitoAndCallingAgent"
 	when
 		eggs: Eggs()
 		house: House(trap==true) from eggs.getHouse()
-		EggsHatched(this.hatched==eggs) over window:time(4d)
+		eggsHatched(this.hatched==eggs) over window:time(4d)
 	then
 		SituationHelper.situationDetected(drools);
 end
@@ -134,7 +134,7 @@ rule "mosquitoCaptured"
 	when
 		mosquito: Mosquito()
 		$house: House() from mosquito.getHouse()
-		$sit: capturedMosquitoAndCallingAgent(house==$house)
+		$sit: capturedMosquitoAndCallingAgent(house==$house, active==true)
 	then
 		$house.removeMosquito(mosquito);
 		retract(mosquito);
@@ -152,12 +152,13 @@ rule "AgentWorking"
 		if(house.getMosquitos().size()>0)
 		{
 			for(Mosquito m : house.getMosquitos()){
+			house.removeMosquito(m);
 			retract(m);
 			}
 			}
 		house.setActivefocus(false);
 		House houseant = house;
-		 for (int visited = 0; visited < 5; visited++) {
+		 for (int visited = 0; visited < 1; visited++) {
             List<House> neighborHouse = houseant.getNeighbors();
             Random random = new Random();
             if(neighborHouse.size()>0)
@@ -172,14 +173,14 @@ rule "AgentWorking"
               if(house.getMosquitos().size()>0)
 		{
               for(Mosquito m : newHouse.getMosquitos()){
-              
+             newHouse.removeMosquito(m);
 			retract(m);
 			
 			}
 			}
               newHouse.setActivefocus(false);
                         houseant = newHouse;
-                        //System.out.println("Visited house by agent");
+                        System.out.println("Visited house "+houseant+" by agent");
         }
         
                         else
