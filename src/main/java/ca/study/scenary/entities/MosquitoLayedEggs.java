@@ -14,16 +14,16 @@ import org.kie.api.definition.type.Role;
  *
  * @author alessandro
  */
-public class mosquitoLayedEggs {
+public class MosquitoLayedEggs {
    private Mosquito layed;
 
-public Mosquito getLayed() {
-	return layed;
-}
+	public Mosquito getLayed() {
+		return layed;
+	}
 
-public void setLayed(Mosquito layed) {
-	this.layed = layed;
-}
+	public void setLayed(Mosquito layed) {
+		this.layed = layed;
+	}
 
    
 }

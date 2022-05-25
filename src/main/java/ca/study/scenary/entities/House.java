@@ -8,7 +8,6 @@ package ca.study.scenary.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import ca.study.scenary.entities.Mosquito;
 
 /**
  *

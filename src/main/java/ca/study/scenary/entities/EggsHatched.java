@@ -14,7 +14,7 @@ import org.kie.api.definition.type.Role;
  *
  * @author alessandro
  */
-public class eggsHatched {
+public class EggsHatched {
    private Eggs hatched;
 
 public Eggs getHatched() {

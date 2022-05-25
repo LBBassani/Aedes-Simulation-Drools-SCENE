@@ -3,10 +3,12 @@ package br.ufes.inf.lprm.scene.examples.aedes;
 import java.util.List;
 import java.util.Random;
 
-import br.ufes.inf.lprm.scene.model.impl.Situation;
-import br.ufes.inf.lprm.scene.util.SituationHelper;
-import br.ufes.inf.lprm.situation.annotations.part;
-import br.ufes.inf.lprm.situation.model.events.*;
+import multicast.senseup.awareness.situation.scene.model.Situation;
+import multicast.senseup.awareness.situation.bindings.*;
+import multicast.senseup.awareness.situation.model.BaseParticipation;
+import multicast.senseup.awareness.situation.model.BaseSituationType;
+import multicast.senseup.awareness.situation.scene.util.SituationHelper;
+
 import ca.study.scenary.entities.*;
 
 
@@ -31,25 +33,21 @@ rule "mosquitoFlying"
 		house.changeMosquito(mosquito);//mosquito chooses another house
 		insert(eventFlown);
 		update(mosquito);
-		//update(house);
-		//System.out.println("mosquito fly");
 end
 
 rule "mosquitoLayingEggs"
 	when
 		mosquito: Mosquito()
 		house: House(trap || activefocus) from mosquito.getHouse()
-		not mosquitoLayedEggs (this.layed==mosquito) over window:time(1d)
+		not MosquitoLayedEggs (this.layed==mosquito) over window:time(1d)
 	then
-		mosquitoLayedEggs eventLay = new mosquitoLayedEggs();
+		MosquitoLayedEggs eventLay = new MosquitoLayedEggs();
 		eventLay.setLayed(mosquito);
 		Eggs neweggs= house.addEggs();//mosquito lay eggs in house
 		insert(eventLay);
 		insert(neweggs);
-		//update(house);
-		//System.out.println("mosquito lay");
 		
-		eggsHatched eventHatch = new eggsHatched();
+		EggsHatched eventHatch = new EggsHatched();
 		eventHatch.setHatched(neweggs);
 		insert(eventHatch);
 end
@@ -77,11 +75,8 @@ rule "eggshatching"
 	when
 		eggs: Eggs()
 		house: House(activefocus==true) from eggs.getHouse()
-		not eggsHatched (this.hatched==eggs) over window:time(20d)
+		not EggsHatched (this.hatched==eggs) over window:time(20d)
 	then
-		//house.removeEggs(eggs);
-		//update(house);
-		//System.out.println("adding 10 mosquitos");
 		Mosquito newmosquito1 = house.addMosq();
 		insert(newmosquito1);
 		Mosquito newmosquito2 = house.addMosq();
@@ -102,8 +97,7 @@ rule "eggshatching"
 		insert(newmosquito9);
 		Mosquito newmosquito10 = house.addMosq();
 		insert(newmosquito10);
-		//System.out.println("removingEGGS");
-        house.removingEggs(eggs);//transform eggs in new mosquitos
+		house.removingEggs(eggs);//transform eggs in new mosquitos
 end
 
 
@@ -113,7 +107,7 @@ rule "capturedMosquitoAndCallingAgent"
 	when
 		eggs: Eggs()
 		house: House(trap==true) from eggs.getHouse()
-		eggsHatched(this.hatched==eggs) over window:time(4d)
+		EggsHatched(this.hatched==eggs) over window:time(4d)
 	then
 		SituationHelper.situationDetected(drools);
 end
@@ -189,7 +183,5 @@ rule "AgentWorking"
                         }
                         }
         houseant.removeAgent();
-		
-		//System.out.println("Agent Worked");
 end
 		
